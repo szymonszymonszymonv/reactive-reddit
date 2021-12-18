@@ -18,7 +18,6 @@ const { CLIENT_ID, SECRET_KEY, headers, refresh_token, access_token } = secret["
 
 // reddit.getHot().then((data) => {console.log(data)})
 
-
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })

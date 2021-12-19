@@ -17,7 +17,10 @@ function Posts(props) {
             setPosts(data.data.posts)
             setLoading(false)
         })        
+
         console.log(posts)
+        
+        
     }, [])
 
     const displayPosts = () => {

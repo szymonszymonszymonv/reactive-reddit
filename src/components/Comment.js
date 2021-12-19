@@ -4,6 +4,7 @@ function Comment(props) {
     return (
         <div>
             {/* comment with author, body, score, upvoting arrows, date */}
+            
         </div>
     )
 }

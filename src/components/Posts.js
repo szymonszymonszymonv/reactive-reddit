@@ -1,14 +1,32 @@
 import PostCard from './PostCard'
 import axiosInstance from '../axiosInstance'
+import { useState, useEffect } from 'react' 
 
 function Posts(props) {
     const { subreddit } = props
-    let posts = axiosInstance.get(`/${subreddit}`)
+    const [posts, setPosts] = useState([])
+    const [loading, setLoading] = useState(true)
+    useEffect(() => {
+        const fetchPosts = async () => {
+            let data = await axiosInstance.get('/')
+            return data
+        }
+        fetchPosts().then(data => {
+            setPosts(data.data.posts)
+            setLoading(false)
+        })        
+        console.log(posts)
+    }, [])
 
     const displayPosts = () => {
-        return posts.map( (post) => {
-            return <PostCard post={post} subreddit={subreddit} />
-        })
+        if(!loading && posts){
+            return posts.map( (post) => { 
+                return <PostCard post={post} subreddit={subreddit} key={post.id} />
+            })
+        }
+        else{
+            return "LOADING POSTS..."
+        }
     }
 
     return (

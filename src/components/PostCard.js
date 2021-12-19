@@ -6,8 +6,8 @@ function PostCard(props) {
     return (
         <div>
             <Link to={`/${subreddit}/${post.id}`}> 
-                { post.title }
-                { /* card view with post title, author, score, upvoting arrows, date */ }
+                { `${post.author} - ${post.title} (${post.score})` }
+                { /* card view with post title, author, score, upvoting arrows, date, subreddit origin */ }
             </Link>
         </div>
     )

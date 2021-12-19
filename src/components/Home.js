@@ -9,6 +9,7 @@ function Home(props) {
             {/* NAVBAR */}
             {/* SUBREDDITS LIST / ON CLICK -> CHANGE SUBREDDIT */}
             {/* POSTS LIST */}
+            <Posts />
         </div>
     )
 }

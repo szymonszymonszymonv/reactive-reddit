@@ -57,14 +57,14 @@ app.get('/', async (req, res) => {
                 //object.postComments[0].comments[0].replies[0].replies[0]
                 // object.keys.map(element => element.postComments)
                 
-                
     let posts = JSON.parse(fs.readFileSync("posts.json"))
     posts = posts.map(post => {
         return {
             id: post.id,
             title: post.title,
             author: post.author,
-            score: post.score,        
+            score: post.score,
+            subreddit: post.subreddit        
         }
     })
     let object = {

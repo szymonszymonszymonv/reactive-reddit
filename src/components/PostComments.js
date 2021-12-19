@@ -12,7 +12,8 @@ function PostComments(props) {
 
     return (
         <div>
-            { displayComments() }
+            tu beda komentarze ahahaha
+            {/* { displayComments() } */}
         </div>
     )
 }

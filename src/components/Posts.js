@@ -1,11 +1,13 @@
 import PostCard from './PostCard'
 import axiosInstance from '../axiosInstance'
 import { useState, useEffect } from 'react' 
+import './styles/Posts.css'
 
 function Posts(props) {
     const { subreddit } = props
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(true)
+
     useEffect(() => {
         const fetchPosts = async () => {
             let data = await axiosInstance.get('/')
@@ -30,7 +32,7 @@ function Posts(props) {
     }
 
     return (
-        <div>
+        <div className="posts">
             {displayPosts()}
         </div>
     )

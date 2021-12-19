@@ -1,0 +1,53 @@
+a {
+    text-decoration: none;
+    color: wheat;
+}
+
+
+
+span {
+    
+}
+
+.post { 
+    display: flex;
+    padding: 0.5rem;
+    margin: 1rem;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-direction: row;
+    border: 1px solid rgb(255, 187, 0);
+    border-radius: 10px;
+}
+
+.postContainer { 
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-direction: row;
+}
+
+.voteContainer {
+    display: flex;
+    margin: 0.5rem;
+    flex-direction: column;
+    color: rgb(236, 154, 46);
+    text-shadow: 0px 1px 5px chocolate;
+}
+
+.postContent {
+    display: flex;
+    flex-direction: column;
+}
+
+.author {
+    display: flex;
+    color: rgb(146, 129, 96);
+    font-size: 0.8rem;
+}
+
+.title {
+    margin-top: 0.1rem;
+    justify-self: end;
+    display: flex;
+}

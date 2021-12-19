@@ -1,13 +1,34 @@
 import Comment from './Comment'
+import axiosInstance from '../axiosInstance'
+import { useState, useEffect } from 'react' 
 
 function PostComments(props) {
     
-    const { comments, subreddit } = props
+    const { subreddit } = props
+    const [comments, setComments] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchComments = async () => {
+            let data = await axiosInstance.get(`/:subreddit}/:id`)
+            return data
+        }
+        fetchComments().then(data => {
+            setComments(data.data.comments)
+            setLoading(false)
+        })        
+        console.log(comments)
+    }, [])
 
     const displayComments = () => {
-        return comments.map( (comment) => {
-            return <Comment comment={comment}/>
-        })
+        if(!loading && comments){
+            return comments.map( (comment) => { 
+                return comment.body
+            })
+        }
+        else{
+            return "LOADING COMMENTS..."
+        }
     }
 
     return (

@@ -7,6 +7,9 @@ const fs = require('fs')
 const port = 5000
 
 app.use(cors())
+app.use(express.urlencoded({extended: true})); 
+app.use(express.json());
+// app.use(express.multipart());
 
 const { CLIENT_ID, SECRET_KEY, headers, refresh_token, access_token } = secret["secret"]
 
@@ -52,7 +55,7 @@ function timeString(hours) {
 // }
 // initFunction()
 
-
+let posts = JSON.parse(fs.readFileSync("posts.json"))
 app.get('/', async (req, res) => {
     // let postTitle = await reddit.getHot("xqcow").map(post => post.title)
 
@@ -78,7 +81,7 @@ app.get('/', async (req, res) => {
     //object.postComments[0].comments[0].replies[0].replies[0]
     // object.keys.map(element => element.postComments)
 
-    let posts = JSON.parse(fs.readFileSync("posts.json"))
+
     posts = posts.map(post => {
         let currDate = new Date()
         let timeStamp = Date.now()
@@ -109,11 +112,12 @@ app.get('/', async (req, res) => {
     res.send(JSON.stringify(object)) //comments.replies - zwraca komentarz komentarza popoga
 })
 
+let comments = JSON.parse(fs.readFileSync("comments.json"))
 app.get(`/:subreddit/:id/`, async (req, res) => {
 
 
     // let posts = await reddit.getSubmission("rec6mi").expandReplies({limit: 5, depth: 5})
-    let comments = JSON.parse(fs.readFileSync("comments.json"))
+
 
     comments = comments.map(comment => {
 
@@ -140,6 +144,15 @@ app.get(`/:subreddit/:id/`, async (req, res) => {
     }
     res.send(JSON.stringify(object)) //comments.replies - zwraca komentarz komentarza popoga
 })
+
+app.post(`/`, (req, res) => {
+
+    let post = req.body
+    reddit.getSubmission(post.id).upvote()
+    
+})
+
+
 
 
 app.listen(port, () => {

@@ -35,6 +35,14 @@ span {
     text-shadow: 0px 1px 5px chocolate;
 }
 
+button {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    color: rgb(236, 154, 46);
+    text-shadow: 0px 1px 5px chocolate;
+  }
+
 .postContent {
     display: flex;
     flex-direction: column;

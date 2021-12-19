@@ -4,14 +4,21 @@ import './styles/PostCard.css'
 function PostCard(props) {
     const { post, subreddit } = props
 
+    const divOnClick = () => {
+        console.log("clicked div")
+    }
+
+    const buttonOnClick = (e) => {
+        e.stopPropagation()
+        console.log("clicked button")
+    }
 
     return (
-        <Link className="post" id={post.id} to={`/${post.subreddit}/${post.id}`}> 
-            <div className="postContainer">
+            <div className="postContainer" onClick={divOnClick}>
                 <div className="voteContainer">
-                    <span className="upvote">▲</span>
+                    <button onClick={buttonOnClick} className="upvote">▲</button>
                     <span className="score">{post.score}</span>
-                    <span className="downvote">▼</span>
+                    <button onClick={buttonOnClick} className="downvote">▼</button>
                 </div>
                 <div className="postContent">
                     <span className="author">posted by u/{post.author}</span>
@@ -19,7 +26,7 @@ function PostCard(props) {
                 </div>
                 { /* card view with post title, author, score, upvoting arrows, date, subreddit origin */ }
             </div>
-        </Link>
+        // </Link>
     )
 }
 

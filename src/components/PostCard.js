@@ -6,18 +6,18 @@ function PostCard(props) {
     const { post, subreddit } = props
 
     const upvoteHandler = (e) => {
-        // e.stopPropagation()
+        e.stopPropagation()
         axiosInstance.post('/',  post )
             .then(res => { console.log(res) })
         console.log(post)
     }
 
     const downvoteHandler = (e) => {
-        // e.stopPropagation()
+        e.stopPropagation()
         console.log("asdads")
     }
     return (
-        <Link className="post" id={post.id} to={`/${post.subreddit}/${post.id}`}>
+        
             <div className="postContainer">
                 <div className="voteContainer">
                     <button onClick={upvoteHandler} className="upvote">▲</button>
@@ -32,7 +32,7 @@ function PostCard(props) {
                 { /* card view with post title, author, score, upvoting arrows, date, subreddit origin */}
 
             </div >
-        </Link>
+        
 
     )
 }

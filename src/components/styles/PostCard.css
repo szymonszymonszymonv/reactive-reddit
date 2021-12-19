@@ -3,13 +3,19 @@ a {
     color: wheat;
 }
 
-
+button {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    color: rgb(236, 154, 46);
+    text-shadow: 0px 1px 5px chocolate;
+}
 
 span {
     
 }
 
-.post { 
+.postContainer { 
     display: flex;
     padding: 0.5rem;
     margin: 1rem;
@@ -18,14 +24,10 @@ span {
     flex-direction: row;
     border: 1px solid rgb(255, 187, 0);
     border-radius: 10px;
+    color: wheat;
+    cursor: pointer;
 }
 
-.postContainer { 
-    display: flex;
-    justify-content: stretch;
-    align-items: stretch;
-    flex-direction: row;
-}
 
 .voteContainer {
     display: flex;

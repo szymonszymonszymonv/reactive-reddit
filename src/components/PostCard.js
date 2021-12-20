@@ -1,12 +1,15 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './styles/PostCard.css'
 import axiosInstance from '../axiosInstance'
 import { useState, useEffect } from 'react'
+
+
 
 function PostCard(props) {
     const { post, subreddit } = props
     const [upvoted, setUpvoted] = useState(post.likes)
     const [downvoted, setDownvoted] = useState(post.likes)
+    let navigate = useNavigate()
 
     const upvoteHandler = (e) => {
         e.stopPropagation()
@@ -40,6 +43,11 @@ function PostCard(props) {
         }
     }
 
+    const postOnClickRedirect = (e) => {
+        e.stopPropagation()
+        navigate(`${post.subreddit}/${post.id}/`)
+    }
+
     const displayPost = () => {
         let upvotedClassName = "upvote"
         let downvotedClassName = "downvote"
@@ -53,7 +61,7 @@ function PostCard(props) {
         }
 
         return (
-            <div className="postContainer">
+            <div className="postContainer" onClick={postOnClickRedirect}>
 
                 <div className="voteContainer">
                     <button onClick={upvoteHandler} className={upvotedClassName}>▲</button>

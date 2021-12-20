@@ -19,8 +19,6 @@ function Posts(props) {
         })        
 
         console.log(posts)
-        
-        
     }, [])
 
     const displayPosts = () => {

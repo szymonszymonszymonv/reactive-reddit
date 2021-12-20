@@ -112,12 +112,12 @@ app.get('/', async (req, res) => {
     res.send(JSON.stringify(object)) //comments.replies - zwraca komentarz komentarza popoga
 })
 
-let comments = JSON.parse(fs.readFileSync("comments.json"))
-app.get(`/:subreddit/:id/`, async (req, res) => {
-
-
-    // let posts = await reddit.getSubmission("rec6mi").expandReplies({limit: 5, depth: 5})
-
+app.get(`/:id/`, async (req, res) => {
+    
+    let comments = JSON.parse(fs.readFileSync("comments.json"))
+    let postId = req.params.id
+    console.log(`fetching comments for post ${postId}`)
+    comments = await reddit.getSubmission(postId).comments
 
     comments = comments.map(comment => {
 

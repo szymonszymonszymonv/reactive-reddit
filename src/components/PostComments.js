@@ -1,16 +1,19 @@
 import Comment from './Comment'
 import axiosInstance from '../axiosInstance'
 import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 
 function PostComments(props) {
-
-    const { subreddit } = props
     const [comments, setComments] = useState([])
     const [loading, setLoading] = useState(true)
+    const params = useParams()
+
+    let subreddit = params.subreddit
+    let postId = params.id
 
     useEffect(() => {
         const fetchComments = async () => {
-            let data = await axiosInstance.get(`/:subreddit/:id`)
+            let data = await axiosInstance.get(`/${postId}`)
             return data
         }
 

@@ -7,7 +7,7 @@ const fs = require('fs')
 const port = 5000
 
 app.use(cors())
-app.use(express.urlencoded({extended: true})); 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(express.multipart());
 
@@ -98,8 +98,8 @@ app.get('/', async (req, res) => {
             score: post.score,
             subreddit: post.subreddit,
             imageUrl: post.url_overridden_by_dest,
-            timeInHours: timeString(hours)
-
+            timeInHours: timeString(hours),
+            likes: post.likes
         }
     })
     let object = {
@@ -145,11 +145,19 @@ app.get(`/:subreddit/:id/`, async (req, res) => {
     res.send(JSON.stringify(object)) //comments.replies - zwraca komentarz komentarza popoga
 })
 
-app.post(`/`, (req, res) => {
-
+app.post(`/:id/upvote`, (req, res) => {
     let post = req.body
     reddit.getSubmission(post.id).upvote()
-    
+})
+
+app.post(`/:id/downvote`, (req, res) => {
+    let post = req.body
+    reddit.getSubmission(post.id).downvote()
+})
+
+app.post(`/:id/unvote`, (req, res) => {
+    let post = req.body
+    reddit.getSubmission(post.id).unvote()
 })
 
 

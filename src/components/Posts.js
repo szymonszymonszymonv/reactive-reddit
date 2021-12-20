@@ -36,6 +36,7 @@ function Posts(props) {
 
     return (
         <div className="posts">
+            
             {displayPosts()}
         </div>
     )

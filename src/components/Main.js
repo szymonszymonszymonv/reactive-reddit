@@ -11,7 +11,7 @@ function Main() {
         <div>
             <Routes>
                 <Route path="/" element={<Home subreddit={subreddit} />} />
-                <Route path={`/:subreddit/:id`} element={ <PostComments subreddit={subreddit} /> } />
+                <Route path={`/:subreddit/:id`} element={<PostComments subreddit={subreddit} />} />
                 {/* more routes soon */}
             </Routes>
         </div>
@@ -19,3 +19,9 @@ function Main() {
 }
 
 export default Main
+
+
+// TODO: COMMENT VIEW
+// TODO: SEND COMMENT
+// TODO: SUBREDDIT LIST SIDEBAR
+// TODO: CHANGE SUBREDDIT 

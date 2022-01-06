@@ -31,7 +31,15 @@ span {
     text-shadow: 0px 1px 5px chocolate;
 }
 
-button {
+.upvote {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    color: rgb(228, 215, 181);
+    text-shadow: 0px 1px 5px chocolate;
+}
+
+.downvote {
     background: none!important;
     border: none;
     padding: 0!important;

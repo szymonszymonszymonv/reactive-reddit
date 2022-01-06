@@ -1,0 +1,6 @@
+.postContainer.notClickable {
+    width: 50vw;
+    min-width: 600px;
+    cursor: auto;
+}
+

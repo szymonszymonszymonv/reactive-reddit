@@ -1,14 +1,20 @@
 import Posts from './Posts'
+import SubredditList from './SubredditList'
+import './styles/Home.css'
+import Header from './Header'
 
 function Home(props) {
     
-    const { subreddit } = props
+    const { setSubreddit, subreddit, setPosts, posts } = props
 
     return (
-        <div>
-            {/* NAVBAR */}
-            {/* SUBREDDITS LIST / ON CLICK -> CHANGE SUBREDDIT */}
-            <Posts />
+        <div className='main'>
+            <section className="content">
+                <aside className='list'>
+                    <SubredditList subreddit={subreddit} setSubreddit={setSubreddit} />
+                </aside>
+                <Posts subreddit={"r/all"} setSubreddit={setSubreddit} setPosts={setPosts} posts={posts} />
+            </section>
         </div>
     )
 }

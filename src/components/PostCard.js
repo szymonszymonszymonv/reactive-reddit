@@ -1,79 +1,60 @@
-import { Link, useNavigate } from 'react-router-dom'
 import './styles/PostCard.css'
+import { Link, useNavigate } from 'react-router-dom'
 import axiosInstance from '../axiosInstance'
 import { useState, useEffect } from 'react'
+import SubmissionScore from './SubmissionScore'
+
 
 
 
 function PostCard(props) {
     const { post, subreddit } = props
-    const [upvoted, setUpvoted] = useState(post.likes)
-    const [downvoted, setDownvoted] = useState(post.likes)
     let navigate = useNavigate()
-
-    const upvoteHandler = (e) => {
-        e.stopPropagation()
-        if (upvoted === true) {
-            setUpvoted(null)
-            axiosInstance.post(`/${post.id}/unvote`, post)
-                .then(res => { console.log(res) })
-        }
-        else {
-            setUpvoted(true)
-            setDownvoted(null)
-
-            axiosInstance.post(`/${post.id}/upvote`, post)
-                .then(res => { console.log(res) })
-        }
-    }
-
-    const downvoteHandler = (e) => {
-        e.stopPropagation()
-
-        if (downvoted === false) {
-            setDownvoted(null)
-            axiosInstance.post(`/${post.id}/unvote`, post)
-                .then(res => { console.log(res) })
-        }
-        else {
-            setUpvoted(null)
-            setDownvoted(false)
-            axiosInstance.post(`/${post.id}/downvote`, post)
-                .then(res => { console.log(res) })
-        }
-    }
 
     const postOnClickRedirect = (e) => {
         e.stopPropagation()
-        navigate(`${post.subreddit}/${post.id}/`)
+        navigate(`/r/${post.subreddit}/${post.id}/`)
+    }
+
+    const createCarousel = (images) => {
+
     }
 
     const displayPost = () => {
-        let upvotedClassName = "upvote"
-        let downvotedClassName = "downvote"
-        if (upvoted === true) {
-            console.log("add upvote clicked")
-            upvotedClassName += " clicked"
+    // TODO: PICTURES GALLERY http://react-responsive-carousel.js.org/
+        let media = []
+        let gallery = ""
+
+        try{
+            console.log(post.medias[0].u)
+            for(let img of post.medias) {
+                if(img.u){
+                    media.push(<img src={img.u} alt="something"/>)
+                }
+                if(img.gif){
+                    media.push(<img src={img.gif} alt="something gif"/>)
+                }
+            }
+            // media = <img src={post.medias[0].u} alt="something"></img>
         }
-        else if (downvoted === false) {
-            console.log("add downvote clicked")
-            downvotedClassName += " clicked"
+        catch {
+            console.log("no media")
+            media = ""
+        }
+
+        if(media){
+            console.log(media)
         }
 
         return (
             <div className="postContainer" onClick={postOnClickRedirect}>
-
-                <div className="voteContainer">
-                    <button onClick={upvoteHandler} className={upvotedClassName}>▲</button>
-                    <span className="score">{post.score}</span>
-                    <button onClick={downvoteHandler} className={downvotedClassName}>▼</button>
-                </div>
+                <SubmissionScore submission={post} isComment={false} />
 
                 <div className="postContent">
-                    <span className="author">posted by u/{post.author}</span>
+                    <span className="author">posted by u/{post.author} in /r/{post.subreddit} || {post.timeInHours}</span>
                     <span className="title">{post.title}</span>
+                    {gallery}
                 </div>
-                { /* card view with post title, author, score, upvoting arrows, date, subreddit origin */}
             </div >
         )
     }

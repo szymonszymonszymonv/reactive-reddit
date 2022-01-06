@@ -314,6 +314,38 @@ app.post(`/comment/:id/unvote`, (req, res) => {
         .catch( err => {console.log(err)})
 })
 
+app.post(`/:id/addComment`, (req, res) => {
+    let object = req.body
+    
+    let cut = object.comment.parentId.slice(3) // moze niepotrzebne? ucinam t3_ z id
+    
+    reddit.getSubmission(cut).reply(object.text)
+})
+
+app.post(`/addPost`, (req, res) => {
+    
+    let post = req.body
+    console.log(post)
+    let subreddit = req.body.subreddit
+    // reddit.submitSelfpost({
+    //     subredditName: 'testingground4bots',
+    //     title: post.title,
+    //     text: post.selftext
+    //   }).then(console.log)
+})
+
+app.post(`/addPostImage`, (req, res) => {
+    
+    let imgUrl = req.body.image
+    console.log(imgUrl)
+    let subreddit = req.body.subreddit
+    // reddit.submitLink({
+    //     subredditName: 'testingground4bots',
+    //     title: 'test title',
+    //     url: imgUrl
+    //   }).then(console.log)
+})
+
 
 
 app.listen(port, () => {

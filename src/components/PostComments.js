@@ -11,11 +11,18 @@ function PostComments(props) {
     let { posts } = props
     const [comments, setComments] = useState([])
     const [loading, setLoading] = useState(true)
+    const [addComment, setAddComment] = useState()
     const params = useParams()
 
     let subreddit = params.subreddit
     let postId = params.id
     const post = posts.find(x => { return x.id === postId })
+
+    const addCommentHandler = () => {
+
+        axiosInstance.post(`/${comments[0].parentId}/addComment`,{comment: comments[0], text: addComment} )
+                .then(res => { console.log(res) })
+    }
 
     useEffect(() => {
         const fetchComments = async () => {
@@ -37,6 +44,8 @@ function PostComments(props) {
                     <Comment key={comment.id} comment={comment} subreddit={subreddit} post={post} />
                 )
             })
+            
+            
         }
         else {
             return (
@@ -46,6 +55,7 @@ function PostComments(props) {
             )
         }
     }
+    
 
     return (
         <div className='commentsContent'>
@@ -53,6 +63,15 @@ function PostComments(props) {
             <div className='comments'>
                 {displayComments()}
             </div>
+        {/* <div> */}
+            {/* tu beda komentarze ahahaha */}
+            {/* {displayComments()} */}
+            {/* <input onChange={e => setAddComment(e.target.value)}></input> */}
+            {/* <button onClick={addCommentHandler}>Add comment</button> */}
+        {/* </div> */}
+            
+
+
         </div>
     )
 }

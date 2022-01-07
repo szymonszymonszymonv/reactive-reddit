@@ -27,11 +27,9 @@ function PostCard(props) {
         }
         if(images.length === 1) {
             return (
-                <CCarousel>
-                    <CCarouselItem >
-                        <CImage  onClick={postOnClickRedirect} thumbnail fluid rounded src={images[0]} />
-                    </CCarouselItem>
-                </CCarousel>
+                // <CCarouselItem >
+                // </CCarouselItem>
+                <CImage  onClick={postOnClickRedirect} thumbnail fluid rounded src={images[0]} />
             )
         }
         else {

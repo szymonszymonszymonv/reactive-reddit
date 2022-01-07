@@ -59,10 +59,13 @@ function Posts(props) {
 
     
     return (
-        <div className="posts">
-            {/* {displayPosts()} */}
-            {posts.length > 0 ? <InfiniteScroll posts={posts} setPosts={setPosts} subreddit={subreddit} /> : ""}
-            {/* <InfiniteScroll posts={posts} setPosts={setPosts} /> */}
+        <div className="postsWrapper">
+
+            <div className="posts">
+                {/* {displayPosts()} */}
+                {posts.length > 0 ? <InfiniteScroll posts={posts} setPosts={setPosts} subreddit={subreddit} /> : ""}
+                {/* <InfiniteScroll posts={posts} setPosts={setPosts} /> */}
+            </div>
         </div>
     )
 }

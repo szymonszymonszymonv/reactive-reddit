@@ -178,6 +178,7 @@ app.get('/r/:subreddit', async (req, res) => {
             url = post.preview.images[0].source.url
         }
         catch {
+            console.log("no images in post")
         }
         
         if(post.media_metadata){

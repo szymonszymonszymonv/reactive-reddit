@@ -14,3 +14,7 @@
     color: wheat;
     cursor: default;
 }
+.commentsWrapper {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,30 @@
+div.commentForm {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background-color: rgb(32, 38, 65);
+    border: 1px solid rgb(57, 69, 122);
+    border-radius: 10px;
+    margin: 1rem;
+}
+
+#commentTooltip {
+    align-self: start;
+    color: rgb(161, 160, 153);
+    font-size: 0.9rem;
+}
+
+#commentInput {
+    padding: 1rem;
+}
+
+#sendComment {
+    padding: 1rem;
+    border: 1px solid rgb(57, 69, 122);
+    background-color: rgb(23, 29, 53);
+    border-radius: 5rem;
+    transition: 0.3s box-shadow;
+}
+#sendComment:hover {
+    box-shadow: 0px 5px 15px 0px rgb(10, 18, 56);
+}

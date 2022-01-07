@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axiosInstance from '../axiosInstance'
 import { useState, useEffect } from 'react'
 import SubmissionScore from './SubmissionScore'
+import { CCarousel, CCarouselItem, CImage } from '@coreui/react'
 
 
 
@@ -11,40 +12,63 @@ function PostCard(props) {
     const { post, subreddit } = props
     let navigate = useNavigate()
 
+    const carouselOnClick = (e) => {
+        e.stopPropagation()
+    }
+
     const postOnClickRedirect = (e) => {
         e.stopPropagation()
         navigate(`/r/${post.subreddit}/${post.id}/`)
     }
 
     const createCarousel = (images) => {
-
+        if(images.length === 0) {
+            return ""
+        }
+        if(images.length === 1) {
+            return (
+                <CCarousel>
+                    <CCarouselItem >
+                        <CImage  onClick={postOnClickRedirect} thumbnail fluid rounded src={images[0]} />
+                    </CCarouselItem>
+                </CCarousel>
+            )
+        }
+        else {
+            return (
+                <CCarousel onClick={(e) => {carouselOnClick(e)}} controls indicators>
+                    {images.map(image => {
+                        return (
+                            <CCarouselItem key={image}>
+                                <CImage onClick={postOnClickRedirect} thumbnail fluid rounded src={image} />
+                            </CCarouselItem>
+                        )
+                    })}
+                </CCarousel>
+            )
+        }
     }
 
     const displayPost = () => {
-    // TODO: PICTURES GALLERY http://react-responsive-carousel.js.org/
         let media = []
-        let gallery = ""
 
         try{
-            console.log(post.medias[0].u)
             for(let img of post.medias) {
                 if(img.u){
-                    media.push(<img src={img.u} alt="something"/>)
+                    media.push(img.u)
                 }
                 if(img.gif){
-                    media.push(<img src={img.gif} alt="something gif"/>)
+                    media.push(img.gif)
                 }
             }
-            // media = <img src={post.medias[0].u} alt="something"></img>
         }
         catch {
-            console.log("no media")
-            media = ""
+            console.log("no medias")
         }
-
-        if(media){
-            console.log(media)
+        if(post.imageUrl !== "") {
+            media.push(post.imageUrl)
         }
+        let carousel = createCarousel(media)
 
         return (
             <div className="postContainer" onClick={postOnClickRedirect}>
@@ -53,7 +77,7 @@ function PostCard(props) {
                 <div className="postContent">
                     <span className="author">posted by u/{post.author} in /r/{post.subreddit} || {post.timeInHours}</span>
                     <span className="title">{post.title}</span>
-                    {gallery}
+                    {carousel}
                 </div>
             </div >
         )

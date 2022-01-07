@@ -37,7 +37,7 @@ function Header(props) {
 
                 <div className="buttonsWrapper">
                     <div className='addPostButton'>
-                        <Link to="/post/create" className="plusPost">+</Link>
+                        <Link to={`/${subreddit}/post/create`} className="plusPost">+</Link>
                     </div>
                     <span className="tooltipy">create post</span>
                 </div>
@@ -53,14 +53,6 @@ function Header(props) {
                     <button onClick={onClickLogin}>log in</button>
                 </div> 
                 }
-
-                {/* <div className='logInWrapper'>
-                    <button onClick={onClickLogin}>log in</button>
-                </div>
-
-                <div className='userWrapper'>
-                    <h1 id="loggedUser">u/{user}</h1>
-                </div> */}
             </header>
         </div>
     )

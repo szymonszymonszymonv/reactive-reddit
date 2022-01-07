@@ -5,24 +5,18 @@ import PostDetails from './PostDetails'
 import Comment from './Comment'
 import './styles/PostComments.css'
 import { CSpinner } from '@coreui/react'
+import CreateComment from './CreateComment'
 
 
 function PostComments(props) {
     let { posts } = props
     const [comments, setComments] = useState([])
     const [loading, setLoading] = useState(true)
-    const [addComment, setAddComment] = useState()
     const params = useParams()
 
     let subreddit = params.subreddit
     let postId = params.id
     const post = posts.find(x => { return x.id === postId })
-
-    const addCommentHandler = () => {
-
-        axiosInstance.post(`/${comments[0].parentId}/addComment`,{comment: comments[0], text: addComment} )
-                .then(res => { console.log(res) })
-    }
 
     useEffect(() => {
         const fetchComments = async () => {
@@ -37,7 +31,6 @@ function PostComments(props) {
     }, [])
 
     const displayComments = () => {
-        console.log(comments)
         if (!loading && comments) {
             return comments.map((comment) => {
                 return (
@@ -59,17 +52,13 @@ function PostComments(props) {
 
     return (
         <div className='commentsContent'>
-            <PostDetails post={post} />
+        <div className="commentsWrapper">
+            <PostDetails post={post} subreddit={subreddit}/>
+            <CreateComment subreddit={subreddit} submission={post} />
+        </div>
             <div className='comments'>
                 {displayComments()}
             </div>
-        {/* <div> */}
-            {/* tu beda komentarze ahahaha */}
-            {/* {displayComments()} */}
-            {/* <input onChange={e => setAddComment(e.target.value)}></input> */}
-            {/* <button onClick={addCommentHandler}>Add comment</button> */}
-        {/* </div> */}
-            
 
 
         </div>

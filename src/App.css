@@ -6,6 +6,10 @@ body {
     background: rgb(26, 31, 56);
 }
 
+.spinner-border {
+    color: wheat;
+}
+
 .App {
   text-align: center;
 }

@@ -1,66 +1,28 @@
-import PostCard from './PostCard'
+import './styles/CreatePost.css'
 import axiosInstance from '../axiosInstance'
-import { useState, useEffect } from 'react'
-import './styles/Posts.css'
-import { CSpinner } from '@coreui/react'
-import { useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUpload } from '@fortawesome/free-solid-svg-icons'
+import { useNavigate } from 'react-router-dom'
 
-function Posts(props) {
-    const { subreddit, setPosts, posts, setSubreddit } = props
-    const params = useParams()
-
-    const [loading, setLoading] = useState(true)
+function CreatePost(props) {
+    const navigate = useNavigate()
     const [addPostTitle, setAddPostTitle] = useState()
     const [addPostSelftext, setAddPostSelftext] = useState()
     const [imgUrl, setImgUrl] = useState()
-
-    useEffect(() => {
-        if(params.subreddit){
-            setSubreddit(`r/${params.subreddit}`)
-        }
-        else {
-            setSubreddit('r/all')
-        }
-    }, [])
-
-
-    useEffect(() => {
-        const fetchPosts = async () => {
-            let data = await axiosInstance.get(subreddit)
-            console.log(data)
-            return data
-        }
-        fetchPosts().then(data => {
-            setPosts(data.data.posts)
-            setLoading(false)
-        })
-
-        console.log(posts)
-    }, [])
+    const [subreddit, setSubreddit] = useState()
 
     const addPostHandler = () => {
         axiosInstance.post(`/addPost`, { subreddit: subreddit, title: addPostTitle, selftext: addPostSelftext })
-            .then(res => { console.log(res) })
+            .then(res => { 
+                console.log(res) 
+                // navigate(`/${res.data.link}`)
+            })
     }
 
     const addPostImgHandler = () => {
         axiosInstance.post(`/addPostImage`, { image: imgUrl, subreddit: subreddit })
             .then(res => { console.log(res) })
-    }
-
-    const displayPosts = () => {
-        if (!loading && posts) {
-            return posts.map((post) => {
-                return <PostCard post={post} subreddit={subreddit} key={post.id} />
-            })
-        }
-        else{
-            return (
-                <div>
-                    <CSpinner />
-                </div>
-            )
-        }
     }
 
     const loadFile = (event) => {
@@ -139,46 +101,30 @@ function Posts(props) {
 
     }
 
-    // const typeHandler = (type) => {
-    //     if (type === "text") {
-    //         return (
-    //             <div>
-    //                 <input placeholder="add title" onChange={e => setAddPostTitle(e.target.value)}></input>
-    //                 <input placeholder="add selftext" onChange={e => setAddPostSelftext(e.target.value)}></input>
-    //                 <button onClick={addPostHandler}>Add post</button>
-    //             </div>
-    //         )
-    //     }
-    //     else if (type === "image") {
-    //         return (
-    //             <div>
-    //                 <input placeholder="add title" onChange={e => setAddPostTitle(e.target.value)}></input>
-    //                 <input id="file" type="file" accept="image/*,audio/*,video/*" onChange={loadFile}></input>
-    //                 {imgUrl}
-    //                 <button onClick={addPostImgHandler}>Add image</button>
-    //             </div>
-    //         )
-    //     }
-    //     else {
-    //         return null
-    //     }
-
-
-    // }
-
     return (
-        <div className="posts">
+        <div>
+            <input placeholder="choose subreddit" onChange={e => setSubreddit(e.target.value)}></input>
 
-            {displayPosts()}
-
-
-
-            {/* <button onClick={typeHandler("text")}>Text</button>
-            <button onClick={typeHandler("image")}>image</button> */}
-
-
+            <div className="postForm">
+                <div className='postImgForm'>
+                    <h1 id="imgFormTitle">create post with image</h1>
+                    <input placeholder="add title" onChange={e => setAddPostTitle(e.target.value)}></input>
+                    <label className="fileUpload" htmlFor="file">
+                        <span id="fileSpan"><FontAwesomeIcon icon={faUpload} /> Upload file</span>
+                    </label>
+                    <input id="file" type="file" accept="image/*,audio/*,video/*" onChange={loadFile} hidden></input>
+                    <button className="formButtons" id="addImgPost" onClick={addPostImgHandler}>Add image post</button>
+                    {imgUrl}
+                </div>
+                <div className='postSelftextForm'>
+                    <h1 id="selftextFormTitle">create post with text</h1>
+                    <input placeholder="add title" onChange={e => setAddPostTitle(e.target.value)}></input>
+                    <textarea id="selftext" placeholder="add selftext" onChange={e => setAddPostSelftext(e.target.value)}></textarea>
+                    <button class="formButtons" id="addPost" onClick={addPostHandler}>Add post</button>
+                </div>
+            </div>
         </div>
     )
 }
 
-export default Posts
+export default CreatePost

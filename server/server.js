@@ -5,6 +5,7 @@ const app = express()
 const snoowrap = require('snoowrap')
 const fs = require('fs')
 const port = 5000
+const crypto = require("crypto")
 
 app.use(cors())
 app.use(express.urlencoded({ extended: true }));
@@ -13,11 +14,42 @@ app.use(express.json());
 
 const { CLIENT_ID, SECRET_KEY, headers, refresh_token, access_token } = secret["secret"]
 
-const reddit = new snoowrap({
+let reddit = new snoowrap({
     userAgent: headers['User-Agent'],
     clientId: CLIENT_ID,
     clientSecret: SECRET_KEY,
     refreshToken: refresh_token
+})
+let reddit_user = false
+
+app.get('/auth', (req, res) => {
+    const authUrl = snoowrap.getAuthUrl({
+        clientId: CLIENT_ID,
+        scope: ['vote', 'subscribe', 'mysubreddits', 'submit', 'identity', 'edit', 'history'],
+        redirectUri: "http://localhost:3000/auth",
+        permanent: true,
+        state: crypto.randomBytes(20).toString('hex')
+    })
+    console.log(authUrl)
+    res.send(JSON.stringify({authUrl: authUrl}))
+})
+
+app.post('/login', (req, res) => {
+    let code = req.body.code
+    snoowrap.fromAuthCode({
+        code: code,
+        userAgent: headers['User-Agent'],
+        clientId: CLIENT_ID,
+        clientSecret: SECRET_KEY,
+        redirectUri: "http://localhost:3000/auth"
+    }).then(r => {
+        reddit_user = r
+        r.getMe().then(data => {
+            res.send(JSON.stringify({me: data}))
+        })
+    }).catch(err => {
+        console.log(err)
+    })
 })
 
 function timeString(hours) {
@@ -123,10 +155,6 @@ app.get('/', async (req, res) => {
 app.get('/r/:subreddit', async (req, res) => {
     let posts = []
     let subreddit = req.params.subreddit
-    if(!subreddit) {
-        console.log("no subreddit specified")
-        subreddit = "all"
-    }
     console.log(`SUBREDDIT: ${subreddit}`)
     try {
         posts = await reddit.getHot(subreddit, {limit: 10})
@@ -269,7 +297,11 @@ app.get(`/r/:subreddit/:id/`, async (req, res) => {
 app.post(`/:id/upvote`, (req, res) => {
     let id = req.params.id
     console.log(id)
-    reddit.getSubmission(id).upvote()
+    let r = reddit
+    if(reddit_user){
+        r = reddit_user
+    }
+    r.getSubmission(id).upvote()
         .then( res => {console.log(res)})
         .catch( err => {console.log(err)})
 })
@@ -277,7 +309,11 @@ app.post(`/:id/upvote`, (req, res) => {
 app.post(`/:id/downvote`, (req, res) => {
     let id = req.params.id
     console.log(id)
-    reddit.getSubmission(id).downvote()
+    let r = reddit
+    if(reddit_user){
+        r = reddit_user
+    }
+    r.getSubmission(id).downvote()
         .then( res => {console.log(res)})
         .catch( err => {console.log(err)})
 })
@@ -285,7 +321,11 @@ app.post(`/:id/downvote`, (req, res) => {
 app.post(`/:id/unvote`, (req, res) => {
     let id = req.params.id
     console.log(id)
-    reddit.getSubmission(id).unvote()
+    let r = reddit
+    if(reddit_user){
+        r = reddit_user
+    }
+    r.getSubmission(id).unvote()
         .then( res => {console.log(res)})
         .catch( err => {console.log(err)})
 })
@@ -293,7 +333,11 @@ app.post(`/:id/unvote`, (req, res) => {
 app.post(`/comment/:id/upvote`, (req, res) => {
     let id = req.params.id
     console.log(id)
-    reddit.getComment(id).upvote()
+    let r = reddit
+    if(reddit_user){
+        r = reddit_user
+    }
+    r.getComment(id).upvote()
         .then( res => {console.log(res)})
         .catch( err => {console.log(err)})
 })
@@ -301,7 +345,11 @@ app.post(`/comment/:id/upvote`, (req, res) => {
 app.post(`/comment/:id/downvote`, (req, res) => {
     let id = req.params.id
     console.log(id)
-    reddit.getComment(id).downvote()
+    let r = reddit
+    if(reddit_user){
+        r = reddit_user
+    }
+    r.getComment(id).downvote()
         .then( res => {console.log(res)})
         .catch( err => {console.log(err)})
 })
@@ -309,7 +357,11 @@ app.post(`/comment/:id/downvote`, (req, res) => {
 app.post(`/comment/:id/unvote`, (req, res) => {
     let id = req.params.id
     console.log(id)
-    reddit.getComment(id).unvote()
+    let r = reddit
+    if(reddit_user){
+        r = reddit_user
+    }
+    r.getComment(id).unvote()
         .then( res => {console.log(res)})
         .catch( err => {console.log(err)})
 })
@@ -318,8 +370,11 @@ app.post(`/:id/addComment`, (req, res) => {
     let object = req.body
     
     let cut = object.comment.parentId.slice(3) // moze niepotrzebne? ucinam t3_ z id
-    
-    reddit.getSubmission(cut).reply(object.text)
+    let r = reddit
+    if(reddit_user){
+        r = reddit_user
+    }
+    r.getSubmission(cut).reply(object.text)
 })
 
 app.post(`/addPost`, (req, res) => {
@@ -327,11 +382,22 @@ app.post(`/addPost`, (req, res) => {
     let post = req.body
     console.log(post)
     let subreddit = req.body.subreddit
-    // reddit.submitSelfpost({
-    //     subredditName: 'testingground4bots',
-    //     title: post.title,
-    //     text: post.selftext
-    //   }).then(console.log)
+    let r = reddit
+    if(reddit_user){
+        r = reddit_user
+    }
+    r.submitSelfpost({
+        // subredditName: 'testingground4bots',
+        subredditName: subreddit,
+        title: post.title,
+        text: post.selftext
+      }).then(data => {
+          let submission_name = data.name.slice(3)
+          let obj = {
+              link: `r/${subreddit}/${submission_name}`
+          }
+          res.send(JSON.stringify(obj))
+      })
 })
 
 app.post(`/addPostImage`, (req, res) => {
@@ -339,14 +405,21 @@ app.post(`/addPostImage`, (req, res) => {
     let imgUrl = req.body.image
     console.log(imgUrl)
     let subreddit = req.body.subreddit
-    // reddit.submitLink({
+    let r = reddit
+    if(reddit_user){
+        r = reddit_user
+    }
+    // r.submitLink({
     //     subredditName: 'testingground4bots',
     //     title: 'test title',
     //     url: imgUrl
     //   }).then(console.log)
 })
 
-
+app.post(`/logout`, (req, res) => {
+    reddit_user = false
+    res.send("user logged out")
+})
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)

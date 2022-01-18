@@ -4,10 +4,12 @@ import axiosInstance from '../axiosInstance'
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { useNavigate } from 'react-router-dom'
 
 function Header(props) {
     const { subreddit, setSubreddit, user } = props
     const [search, setSearch] = useState("")
+    const navigate = useNavigate()
 
     const onClickLogin = () => {
         axiosInstance.get("/auth")
@@ -15,6 +17,7 @@ function Header(props) {
                 window.location.href = res.data.authUrl
             })
     }
+
     const Logout = () => {
         localStorage.removeItem("user")
         axiosInstance.post("/logout")
@@ -22,6 +25,13 @@ function Header(props) {
                 console.log(res)
                 window.location.reload()
             })
+    }
+
+    const handleKeyPress = (e) => {
+        if(e.code === "Enter") {
+            console.log("enter pressed")
+            navigate(`/search/${search}`)
+        }
     }
 
     return (
@@ -37,9 +47,8 @@ function Header(props) {
                 <h1 id="browsing">browsing {subreddit}</h1>
 
                 <div className='searchWrapper'>
-                    <input className='searchBar' placeholder="search reddit" onChange={(e) => setSearch(e.target.value)}></input>
+                    <input className='searchBar' placeholder="search reddit" onKeyPress={handleKeyPress} onChange={(e) => setSearch(e.target.value)}></input>
                     <Link to={`/search/${search}`} className="plusPost"><FontAwesomeIcon icon={faSearch} /></Link>
-
                 </div>
 
                 <div className="buttonsWrapper">

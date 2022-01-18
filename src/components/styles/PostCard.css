@@ -6,6 +6,8 @@ a {
 .carousel {
     display: flex;
     justify-self: auto;
+    object-fit: cover;
+
 }
 
 img {

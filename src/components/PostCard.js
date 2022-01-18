@@ -27,14 +27,12 @@ function PostCard(props) {
         }
         if(images.length === 1) {
             return (
-                // <CCarouselItem >
-                // </CCarouselItem>
                 <CImage  onClick={postOnClickRedirect} thumbnail fluid rounded src={images[0]} />
             )
         }
         else {
             return (
-                <CCarousel onClick={(e) => {carouselOnClick(e)}} controls indicators>
+                <CCarousel onClick={(e) => {carouselOnClick(e)}} controls indicators wrap={false}>
                     {images.map(image => {
                         return (
                             <CCarouselItem key={image}>

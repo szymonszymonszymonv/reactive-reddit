@@ -11,11 +11,12 @@ function SubredditListCard(props) {
     }
 
     return (
-        subreddits.map(subreddit => {
+        subreddits.map((subreddit, idx )=> {
             return (
-                <div className="postContainer subredditContainer" onClick={(e) => { subredditOnClickRedirect(e, subreddit) }}>
+                <div key={idx} className="postContainer subredditContainer" onClick={(e) => { subredditOnClickRedirect(e, subreddit) }}>
                     <div className="postContent subredditContent">
-                        <span className="subredditName">community: {subreddit.url}  subscribers: {subreddit.subscribers}</span>
+                        <span className="subredditName">community: {subreddit.url}</span>
+                        <span className="subredditName">subscribers: {subreddit.subscribers}</span>
                         <span className="subredditSubtitle">{subreddit.description}</span>
                     </div>
                 </div>

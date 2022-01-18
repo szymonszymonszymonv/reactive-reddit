@@ -2,6 +2,7 @@
 .voteContainer {
     display: flex;
     margin: 0.5rem;
+    align-items: center;
     flex-direction: column;
     color: rgb(236, 154, 46);
     text-shadow: 0px 1px 5px chocolate;
@@ -13,12 +14,20 @@ button {
     padding: 0;
     color: rgb(228, 215, 181);
     text-shadow: 0px 1px 5px chocolate;
-    transition: font-size .3s;
+    transition: color .3s;
     cursor: pointer;
 }
 
 button:hover {
     font-size: 1rem;
+}
+
+.upvote:hover {
+    color:rgb(42, 176, 230);
+}
+
+.downvote:hover {
+    color:rgb(228, 69, 69);
 }
 
 .upvote.clicked {
@@ -27,7 +36,7 @@ button:hover {
 }
 
 .downvote.clicked {
-    color: rgb(11, 75, 117);
+    color: rgb(148, 30, 30);
     text-shadow: 0px 1px 5px rgb(11, 75, 117);
 }
 

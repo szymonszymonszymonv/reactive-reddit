@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Home from './Home'
 import Header from './Header'
@@ -12,9 +12,11 @@ import Search from './Search'
 
 function Main() {
 
-    const [subreddit, setSubreddit] = useState("r/all")
     const [posts, setPosts] = useState([])
     const [user, setUser] = useState("")
+    const [subreddit, setSubreddit] = useState("r/all")
+
+
     useEffect(() => {
         let name = localStorage.getItem("user")
         setUser(name)
@@ -28,7 +30,8 @@ function Main() {
                     <Route path="/" element={<Home subreddit={subreddit} setSubreddit={setSubreddit} setPosts={setPosts} posts={posts} user={user} />} />
                     <Route path="/r/:subreddit" element={<Posts subreddit={subreddit} setSubreddit={setSubreddit} setPosts={setPosts} posts={posts} />} />
                     <Route path="/r/:subreddit/:id" element={<PostComments subreddit={subreddit} posts={posts} />} />
-                    <Route path="/post/create" element={<CreatePost />} />
+                    {/* <Route path="/post/create" element={<CreatePost />} /> */}
+                    <Route path="/r/:subreddit/post/create" element={<CreatePost subreddit={subreddit} setSubreddit />} />
                     <Route path="/auth" element={<Auth setUser={setUser} />} />
                     <Route path="/search/:searchInput" element={<Search posts={posts} setPosts={setPosts} subreddit={subreddit} setSubreddit={setSubreddit} />} />
                     {/* more routes soon */}

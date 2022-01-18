@@ -8,6 +8,12 @@ a {
     justify-self: auto;
 }
 
+img {
+    max-height: 50vh;
+    width: auto;
+    height: auto;
+}
+
 .postContainer { 
     display: flex;
     padding: 0.5rem;

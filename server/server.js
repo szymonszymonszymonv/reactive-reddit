@@ -26,7 +26,7 @@ app.get('/auth', (req, res) => {
     const authUrl = snoowrap.getAuthUrl({
         clientId: CLIENT_ID,
         scope: ['vote', 'subscribe', 'mysubreddits', 'submit', 'identity', 'edit', 'history'],
-        redirectUri: "http://localhost:3000/auth",
+        redirectUri: "http://127.0.0.1:3000/auth",
         permanent: true,
         state: crypto.randomBytes(20).toString('hex')
     })
@@ -41,7 +41,7 @@ app.post('/login', (req, res) => {
         userAgent: headers['User-Agent'],
         clientId: CLIENT_ID,
         clientSecret: SECRET_KEY,
-        redirectUri: "http://localhost:3000/auth"
+        redirectUri: "http://127.0.0.1:3000/auth"
     }).then(r => {
         reddit_user = r
         r.getMe().then(data => {
@@ -155,7 +155,7 @@ app.get('/', async (req, res) => {
 app.get('/r/:subreddit', async (req, res) => {
     let posts = []
     let subreddit = req.params.subreddit
-    console.log(`SUBREDDIT: ${subreddit}`)
+    console.log(`fetching posts for subreddit ${subreddit}`)
     try {
         posts = await reddit.getHot(subreddit, { limit: 10 })
     }
@@ -171,8 +171,18 @@ app.get('/r/:subreddit', async (req, res) => {
 
         let medias = []
 
-        if (post.media_metadata) {
-            for (let img in post.media_metadata) {
+        
+        let url = ""
+
+        try {
+            url = post.preview.images[0].source.url
+        }
+        catch {
+            console.log("no images in post")
+        }
+        
+        if(post.media_metadata){
+            for(let img in post.media_metadata){
                 medias.push(post.media_metadata[img].s)
             }
         }
@@ -184,7 +194,7 @@ app.get('/r/:subreddit', async (req, res) => {
             selftext: post.selftext,
             score: post.score,
             subreddit: post.subreddit.display_name,
-            imageUrl: post.url_overridden_by_dest,
+            imageUrl: url,
             timeInHours: timeString(hours),
             likes: post.likes,
             medias: medias
@@ -193,54 +203,7 @@ app.get('/r/:subreddit', async (req, res) => {
 
     let object = { posts: posts }
     console.log("sending posts")
-    res.send(JSON.stringify(object))
-
-    // reddit.getHot(subreddit, {limit: 10})
-    //     .then(data => {
-    //         posts = data
-    //         console.log("fetching posts successful")
-
-    //         posts = posts.map(post => {
-    //             let timeStamp = Date.now()
-    //             let postTime = post.created_utc * 1000 // change s to ms
-    //             let timeDiff = timeStamp - postTime
-    //             let hours = Math.round(timeDiff / (1000 * 3600))
-
-    //             let medias = []
-
-    //             if(post.media_metadata){
-    //                 for(let img in post.media_metadata){
-    //                     medias.push(post.media_metadata[img].s)
-    //                 }
-    //             }
-
-    //             return {
-    //                 id: post.id,
-    //                 title: post.title,
-    //                 author: post.author,
-    //                 selftext: post.selftext,
-    //                 score: post.score,
-    //                 subreddit: post.subreddit,
-    //                 imageUrl: post.url_overridden_by_dest,
-    //                 timeInHours: timeString(hours),
-    //                 likes: post.likes,
-    //                 medias: medias
-    //             }
-    //         })
-
-    //         let object = {posts: posts}
-    //         console.log("sending posts")
-    //         res.send(JSON.stringify(object)) 
-    //     })
-    //     .catch(err => console.log(err))
-
-    // try {
-    //     posts = await reddit.getHot(subreddit)
-    // }
-    // catch (err){
-    //     console.log(err)
-    // }
-
+    res.send(JSON.stringify(object)) 
 })
 
 let constructComment = (comment) => {
@@ -274,6 +237,10 @@ let constructReplies = (comment) => {
     return replies
 }
 
+app.get(`/post/:id`, (req, res) => {
+
+})
+
 app.get(`/r/:subreddit/:id/`, async (req, res) => {
 
     let comments = JSON.parse(fs.readFileSync("comments.json"))
@@ -294,9 +261,61 @@ app.get(`/r/:subreddit/:id/`, async (req, res) => {
     res.send(JSON.stringify(object))
 })
 
+app.get(`/r/:subreddit/:id/loadMore`, async (req, res) => {
+    let posts = []
+    let subreddit = req.params.subreddit
+    let id = req.params.id
+    console.log(`loading more after post: ${id}`)
+    try {
+        posts = await reddit.getHot(subreddit, {limit: 10, after: `t3_${id}`})
+    }
+    catch (err){
+        console.log(err)
+    }
+    
+    posts = posts.map(post => {
+        let timeStamp = Date.now()
+        let postTime = post.created_utc * 1000 // change s to ms
+        let timeDiff = timeStamp - postTime
+        let hours = Math.round(timeDiff / (1000 * 3600))
+
+        let medias = []
+
+        let url = ""
+
+        try {
+            url = post.preview.images[0].source.url
+        }
+        catch {
+            console.log("no images in post")
+        }
+        
+        if(post.media_metadata){
+            for(let img in post.media_metadata){
+                medias.push(post.media_metadata[img].s)
+            }
+        }
+        return {
+            id: post.id,
+            title: post.title,
+            author: post.author.name,
+            selftext: post.selftext,
+            score: post.score,
+            subreddit: post.subreddit.display_name,
+            imageUrl: url,
+            timeInHours: timeString(hours),
+            likes: post.likes,
+            medias: medias
+        }
+    })
+
+    let object = {posts: posts}
+    console.log("sending posts")
+    res.send(JSON.stringify(object)) 
+})
 app.post(`/:id/upvote`, (req, res) => {
     let id = req.params.id
-    console.log(id)
+    console.log(`upvoting post ${id}`)
     let r = reddit
     if (reddit_user) {
         r = reddit_user
@@ -308,7 +327,7 @@ app.post(`/:id/upvote`, (req, res) => {
 
 app.post(`/:id/downvote`, (req, res) => {
     let id = req.params.id
-    console.log(id)
+    console.log(`downvoting post ${id}`)
     let r = reddit
     if (reddit_user) {
         r = reddit_user
@@ -318,9 +337,11 @@ app.post(`/:id/downvote`, (req, res) => {
         .catch(err => { console.log(err) })
 })
 
+
+
 app.post(`/:id/unvote`, (req, res) => {
     let id = req.params.id
-    console.log(id)
+    console.log(`unvoting post ${id}`)
     let r = reddit
     if (reddit_user) {
         r = reddit_user
@@ -332,7 +353,7 @@ app.post(`/:id/unvote`, (req, res) => {
 
 app.post(`/comment/:id/upvote`, (req, res) => {
     let id = req.params.id
-    console.log(id)
+    console.log(`upvoting comment ${id}`)
     let r = reddit
     if (reddit_user) {
         r = reddit_user
@@ -344,7 +365,7 @@ app.post(`/comment/:id/upvote`, (req, res) => {
 
 app.post(`/comment/:id/downvote`, (req, res) => {
     let id = req.params.id
-    console.log(id)
+    console.log(`downvoting comment ${id}`)
     let r = reddit
     if (reddit_user) {
         r = reddit_user
@@ -356,7 +377,7 @@ app.post(`/comment/:id/downvote`, (req, res) => {
 
 app.post(`/comment/:id/unvote`, (req, res) => {
     let id = req.params.id
-    console.log(id)
+    console.log(`unvoting comment ${id}`)
     let r = reddit
     if (reddit_user) {
         r = reddit_user
@@ -368,20 +389,40 @@ app.post(`/comment/:id/unvote`, (req, res) => {
 
 app.post(`/:id/addComment`, (req, res) => {
     let object = req.body
-
-    let cut = object.comment.parentId.slice(3) // moze niepotrzebne? ucinam t3_ z id
+    let type = req.body.type
+    let id = req.params.id
+    console.log(`adding comment '${object.text}' for submission: ${id}`)
+    
+    // let cut = id.slice(3) // moze niepotrzebne? ucinam t3_ z id
     let r = reddit
     if (reddit_user) {
         r = reddit_user
     }
-    r.getSubmission(cut).reply(object.text)
+    if(type === "post") {
+        r.getSubmission(id).reply(object.text)
+            .then(r => {
+                res.send(r.data)
+            })
+            .catch(err => {
+                res.send(err)
+            })
+    }
+    else{
+        r.getComment(id).reply(object.text)
+        .then(r => {
+            res.send(r.data)
+        })
+        .catch(err => {
+            res.send(err)
+        })
+    }
 })
 
 app.post(`/addPost`, (req, res) => {
 
     let post = req.body
-    console.log(post)
     let subreddit = req.body.subreddit
+    console.log(`adding post '${post}' to subreddit ${subreddit}`)
     let r = reddit
     if (reddit_user) {
         r = reddit_user
@@ -403,17 +444,25 @@ app.post(`/addPost`, (req, res) => {
 app.post(`/addPostImage`, (req, res) => {
 
     let imgUrl = req.body.image
-    console.log(imgUrl)
     let subreddit = req.body.subreddit
+    let title = req.body.title
+    console.log(`adding image post '${imgUrl}' to subreddit ${subreddit}`)
+
     let r = reddit
     if (reddit_user) {
         r = reddit_user
     }
-    // r.submitLink({
-    //     subredditName: 'testingground4bots',
-    //     title: 'test title',
-    //     url: imgUrl
-    //   }).then(console.log)
+    r.submitLink({
+        subredditName: subreddit,
+        title: title,
+        url: imgUrl
+      }).then(data => {
+        let submission_name = data.name.slice(3)
+        let obj = {
+            link: `r/${subreddit}/${submission_name}`
+        }
+        res.send(JSON.stringify(obj))
+    })
 })
 
 app.get(`/search/:searchQuery`, (req, res) => {
@@ -491,6 +540,7 @@ app.get(`/search/:searchQuery`, (req, res) => {
 
 app.post(`/logout`, (req, res) => {
     reddit_user = false
+    console.log("logging out")
     res.send("user logged out")
 })
 

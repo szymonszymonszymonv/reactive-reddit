@@ -1,11 +1,13 @@
 import './styles/Comment.css'
 import SubmissionScore from './SubmissionScore'
 import React, { useState } from 'react';
+import CreateComment from './CreateComment';
 
 
 function Comment(props) {
     const { comment } = props
     const [ show, setShow ] = useState(true);
+    const [showReply, setShowReply] = useState(false);
     const displayReplies = () => {
         if(comment.replies.length === 0) { return "" }
         return (
@@ -31,7 +33,8 @@ function Comment(props) {
                                         <span className="author">u/{comment.author} || {comment.timeInHours}</span>
                                         <span className="commentBody">{comment.body}</span>
                                     </div>
-                                    
+                                    <button id="reply" onClick={() => {setShowReply(!showReply)}}>reply</button>
+                                    {showReply ? <CreateComment submission={comment}/> : ""} 
                                 </li>
                             </div>
                             

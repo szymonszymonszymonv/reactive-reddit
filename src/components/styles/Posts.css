@@ -4,5 +4,13 @@
     justify-content: center;
     width: 50vw;
     min-width: 600px;
+    /* margin-right: auto; */
+}
+.postsWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     margin-right: auto;
+    align-items: center;
+    align-self: center;
 }

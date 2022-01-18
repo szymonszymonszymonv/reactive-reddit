@@ -15,18 +15,19 @@ function Posts(props) {
     const [imgUrl, setImgUrl] = useState()
 
     useEffect(() => {
-        if(params.subreddit){
+        let newSubreddit = ""
+        if (params.subreddit) {
+            console.log("ZMIENIAM SUBREDDIT PO SEARCHU")
             setSubreddit(`r/${params.subreddit}`)
+            newSubreddit = `r/${params.subreddit}`
         }
         else {
             setSubreddit('r/all')
+            newSubreddit = `r/all`
         }
-    }, [])
 
-
-    useEffect(() => {
         const fetchPosts = async () => {
-            let data = await axiosInstance.get(subreddit)
+            let data = await axiosInstance.get(newSubreddit)
             console.log(data)
             return data
         }
@@ -34,9 +35,14 @@ function Posts(props) {
             setPosts(data.data.posts)
             setLoading(false)
         })
-
-        console.log(posts)
     }, [])
+
+
+    // useEffect(() => {
+
+    //     console.log(posts)
+    //     console.log("WCZYTUJE NOWE ")
+    // }, [])
 
     const addPostHandler = () => {
         axiosInstance.post(`/addPost`, { subreddit: subreddit, title: addPostTitle, selftext: addPostSelftext })
@@ -54,7 +60,7 @@ function Posts(props) {
                 return <PostCard post={post} subreddit={subreddit} key={post.id} />
             })
         }
-        else{
+        else {
             return (
                 <div>
                     <CSpinner />
@@ -168,8 +174,8 @@ function Posts(props) {
 
     return (
         <div className="posts">
-
             {displayPosts()}
+            <div>{subreddit}</div>
 
 
 

@@ -31,7 +31,7 @@ app.get('/auth', (req, res) => {
         state: crypto.randomBytes(20).toString('hex')
     })
     console.log(authUrl)
-    res.send(JSON.stringify({authUrl: authUrl}))
+    res.send(JSON.stringify({ authUrl: authUrl }))
 })
 
 app.post('/login', (req, res) => {
@@ -45,7 +45,7 @@ app.post('/login', (req, res) => {
     }).then(r => {
         reddit_user = r
         r.getMe().then(data => {
-            res.send(JSON.stringify({me: data}))
+            res.send(JSON.stringify({ me: data }))
         })
     }).catch(err => {
         console.log(err)
@@ -122,9 +122,9 @@ app.get('/', async (req, res) => {
         let hours = Math.round(timeDiff / (1000 * 3600))
 
         let medias = []
-        
-        if(post.media_metadata){
-            for(let img in post.media_metadata){
+
+        if (post.media_metadata) {
+            for (let img in post.media_metadata) {
                 medias.push(post.media_metadata[img].s)
             }
         }
@@ -157,9 +157,9 @@ app.get('/r/:subreddit', async (req, res) => {
     let subreddit = req.params.subreddit
     console.log(`SUBREDDIT: ${subreddit}`)
     try {
-        posts = await reddit.getHot(subreddit, {limit: 10})
+        posts = await reddit.getHot(subreddit, { limit: 10 })
     }
-    catch (err){
+    catch (err) {
         console.log(err)
     }
 
@@ -170,9 +170,9 @@ app.get('/r/:subreddit', async (req, res) => {
         let hours = Math.round(timeDiff / (1000 * 3600))
 
         let medias = []
-        
-        if(post.media_metadata){
-            for(let img in post.media_metadata){
+
+        if (post.media_metadata) {
+            for (let img in post.media_metadata) {
                 medias.push(post.media_metadata[img].s)
             }
         }
@@ -191,15 +191,15 @@ app.get('/r/:subreddit', async (req, res) => {
         }
     })
 
-    let object = {posts: posts}
+    let object = { posts: posts }
     console.log("sending posts")
-    res.send(JSON.stringify(object)) 
+    res.send(JSON.stringify(object))
 
     // reddit.getHot(subreddit, {limit: 10})
     //     .then(data => {
     //         posts = data
     //         console.log("fetching posts successful")
-            
+
     //         posts = posts.map(post => {
     //             let timeStamp = Date.now()
     //             let postTime = post.created_utc * 1000 // change s to ms
@@ -207,7 +207,7 @@ app.get('/r/:subreddit', async (req, res) => {
     //             let hours = Math.round(timeDiff / (1000 * 3600))
 
     //             let medias = []
-                
+
     //             if(post.media_metadata){
     //                 for(let img in post.media_metadata){
     //                     medias.push(post.media_metadata[img].s)
@@ -248,8 +248,8 @@ let constructComment = (comment) => {
     let postTime = comment.created_utc * 1000
     let timeDiff = timeStamp - postTime
     let hours = Math.round(timeDiff / (1000 * 3600))
-    
-    let commentObj =  {
+
+    let commentObj = {
         id: comment.id,
         body: comment.body,
         author: comment.author.name,
@@ -263,10 +263,10 @@ let constructComment = (comment) => {
 
 let constructReplies = (comment) => {
     let replies = []
-    if([...comment.replies].length === 0) {
+    if ([...comment.replies].length === 0) {
         return replies
     }
-    for(let reply of comment.replies) {
+    for (let reply of comment.replies) {
         let replyObj = constructComment(reply)
         replyObj.replies = constructReplies(reply)
         replies.push(replyObj)
@@ -275,7 +275,7 @@ let constructReplies = (comment) => {
 }
 
 app.get(`/r/:subreddit/:id/`, async (req, res) => {
-    
+
     let comments = JSON.parse(fs.readFileSync("comments.json"))
     let postId = req.params.id
     console.log(`fetching comments for post ${postId}`)
@@ -286,7 +286,7 @@ app.get(`/r/:subreddit/:id/`, async (req, res) => {
         let commentObj = constructComment(comment)
         commentObj.replies = constructReplies(comment)
         return commentObj
-        
+
     })
     let object = {
         comments: comments
@@ -298,92 +298,92 @@ app.post(`/:id/upvote`, (req, res) => {
     let id = req.params.id
     console.log(id)
     let r = reddit
-    if(reddit_user){
+    if (reddit_user) {
         r = reddit_user
     }
     r.getSubmission(id).upvote()
-        .then( res => {console.log(res)})
-        .catch( err => {console.log(err)})
+        .then(res => { console.log(res) })
+        .catch(err => { console.log(err) })
 })
 
 app.post(`/:id/downvote`, (req, res) => {
     let id = req.params.id
     console.log(id)
     let r = reddit
-    if(reddit_user){
+    if (reddit_user) {
         r = reddit_user
     }
     r.getSubmission(id).downvote()
-        .then( res => {console.log(res)})
-        .catch( err => {console.log(err)})
+        .then(res => { console.log(res) })
+        .catch(err => { console.log(err) })
 })
 
 app.post(`/:id/unvote`, (req, res) => {
     let id = req.params.id
     console.log(id)
     let r = reddit
-    if(reddit_user){
+    if (reddit_user) {
         r = reddit_user
     }
     r.getSubmission(id).unvote()
-        .then( res => {console.log(res)})
-        .catch( err => {console.log(err)})
+        .then(res => { console.log(res) })
+        .catch(err => { console.log(err) })
 })
 
 app.post(`/comment/:id/upvote`, (req, res) => {
     let id = req.params.id
     console.log(id)
     let r = reddit
-    if(reddit_user){
+    if (reddit_user) {
         r = reddit_user
     }
     r.getComment(id).upvote()
-        .then( res => {console.log(res)})
-        .catch( err => {console.log(err)})
+        .then(res => { console.log(res) })
+        .catch(err => { console.log(err) })
 })
 
 app.post(`/comment/:id/downvote`, (req, res) => {
     let id = req.params.id
     console.log(id)
     let r = reddit
-    if(reddit_user){
+    if (reddit_user) {
         r = reddit_user
     }
     r.getComment(id).downvote()
-        .then( res => {console.log(res)})
-        .catch( err => {console.log(err)})
+        .then(res => { console.log(res) })
+        .catch(err => { console.log(err) })
 })
 
 app.post(`/comment/:id/unvote`, (req, res) => {
     let id = req.params.id
     console.log(id)
     let r = reddit
-    if(reddit_user){
+    if (reddit_user) {
         r = reddit_user
     }
     r.getComment(id).unvote()
-        .then( res => {console.log(res)})
-        .catch( err => {console.log(err)})
+        .then(res => { console.log(res) })
+        .catch(err => { console.log(err) })
 })
 
 app.post(`/:id/addComment`, (req, res) => {
     let object = req.body
-    
+
     let cut = object.comment.parentId.slice(3) // moze niepotrzebne? ucinam t3_ z id
     let r = reddit
-    if(reddit_user){
+    if (reddit_user) {
         r = reddit_user
     }
     r.getSubmission(cut).reply(object.text)
 })
 
 app.post(`/addPost`, (req, res) => {
-    
+
     let post = req.body
     console.log(post)
     let subreddit = req.body.subreddit
     let r = reddit
-    if(reddit_user){
+    if (reddit_user) {
         r = reddit_user
     }
     r.submitSelfpost({
@@ -391,22 +391,22 @@ app.post(`/addPost`, (req, res) => {
         subredditName: subreddit,
         title: post.title,
         text: post.selftext
-      }).then(data => {
-          let submission_name = data.name.slice(3)
-          let obj = {
-              link: `r/${subreddit}/${submission_name}`
-          }
-          res.send(JSON.stringify(obj))
-      })
+    }).then(data => {
+        let submission_name = data.name.slice(3)
+        let obj = {
+            link: `r/${subreddit}/${submission_name}`
+        }
+        res.send(JSON.stringify(obj))
+    })
 })
 
 app.post(`/addPostImage`, (req, res) => {
-    
+
     let imgUrl = req.body.image
     console.log(imgUrl)
     let subreddit = req.body.subreddit
     let r = reddit
-    if(reddit_user){
+    if (reddit_user) {
         r = reddit_user
     }
     // r.submitLink({
@@ -415,6 +415,79 @@ app.post(`/addPostImage`, (req, res) => {
     //     url: imgUrl
     //   }).then(console.log)
 })
+
+app.get(`/search/:searchQuery`, (req, res) => {
+    console.log("jestem w search")
+    let search = req.params.searchQuery
+    // console.log(test)
+
+    let subredditsPromise = reddit.searchSubreddits({ query: search })
+    let postsPromise = reddit.search({ query: search })
+    Promise.all([subredditsPromise, postsPromise]).then((values) => {
+        let subredditsData = values[0]
+        let subreddits = [...subredditsData]
+
+        subreddits = subreddits.map((item) => {
+            return ({
+                url: item.url,
+                description: item.public_description,
+                subscribers: item.subscribers
+            })
+        })
+
+        let postsData = values[1]
+
+        let posts = [...postsData]
+        posts = posts.map(post => {
+            let currDate = new Date()
+            let timeStamp = Date.now()
+            let postTime = post.created_utc * 1000 // change s to ms
+            let timeDiff = timeStamp - postTime
+            let hours = Math.round(timeDiff / (1000 * 3600))
+
+            let medias = []
+
+            if (post.media_metadata) {
+                for (let img in post.media_metadata) {
+                    medias.push(post.media_metadata[img].s)
+                }
+            }
+
+            return {
+                id: post.id,
+                title: post.title,
+                author: post.author.name,
+                selftext: post.selftext,
+                score: post.score,
+                subreddit: post.subreddit.display_name,
+                imageUrl: post.url_overridden_by_dest,
+                timeInHours: timeString(hours),
+                likes: post.likes,
+                medias: medias
+            }
+
+        })
+
+        res.send({ posts: posts, subreddits: subreddits })
+    })
+})
+
+// .then(data => {
+
+//     let subreddits = [...data]
+
+//     subreddits = subreddits.map((item) => {
+//         return ({
+//             url: item.url,
+//             description: item.public_description,
+//             subscribers: item.subscribers
+//         })
+//     })
+
+//     res.send(subreddits)
+// })
+
+
 
 app.post(`/logout`, (req, res) => {
     reddit_user = false

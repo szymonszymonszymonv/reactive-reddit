@@ -1,9 +1,11 @@
 import './styles/Header.css'
 import { Link } from 'react-router-dom'
 import axiosInstance from '../axiosInstance'
+import { useState } from 'react'
 
 function Header(props) {
     const { subreddit, setSubreddit, user } = props
+    const [search, setSearch] = useState("")
 
     const onClickLogin = () => {
         axiosInstance.get("/auth")
@@ -25,14 +27,16 @@ function Header(props) {
             <header>
                 <div className='redditWrapper'>
                     <Link id="reddit" to="/">
-                        sreddit
+                        reddit
                     </Link>
 
                 </div>
                 <h1 id="browsing">browsing {subreddit}</h1>
 
                 <div className='searchWrapper'>
-                    <input className='searchBar' placeholder="search sreddit"></input>
+                    <input className='searchBar' placeholder="search reddit" onChange={(e) => setSearch(e.target.value)}></input>
+                    <Link to={`/search/${search}`} className="plusPost">+</Link>
+
                 </div>
 
                 <div className="buttonsWrapper">

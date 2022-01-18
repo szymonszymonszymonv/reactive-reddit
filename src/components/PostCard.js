@@ -16,23 +16,19 @@ function PostCard(props) {
         navigate(`/r/${post.subreddit}/${post.id}/`)
     }
 
-    const createCarousel = (images) => {
-
-    }
-
     const displayPost = () => {
-    // TODO: PICTURES GALLERY http://react-responsive-carousel.js.org/
+        // TODO: PICTURES GALLERY http://react-responsive-carousel.js.org/
         let media = []
         let gallery = ""
 
-        try{
+        try {
             console.log(post.medias[0].u)
-            for(let img of post.medias) {
-                if(img.u){
-                    media.push(<img src={img.u} alt="something"/>)
+            for (let img of post.medias) {
+                if (img.u) {
+                    media.push(<img src={img.u} alt="something" />)
                 }
-                if(img.gif){
-                    media.push(<img src={img.gif} alt="something gif"/>)
+                if (img.gif) {
+                    media.push(<img src={img.gif} alt="something gif" />)
                 }
             }
             // media = <img src={post.medias[0].u} alt="something"></img>
@@ -42,7 +38,7 @@ function PostCard(props) {
             media = ""
         }
 
-        if(media){
+        if (media) {
             console.log(media)
         }
 

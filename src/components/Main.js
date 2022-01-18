@@ -8,6 +8,7 @@ import Posts from './Posts'
 import SubredditList from './SubredditList'
 import CreatePost from './CreatePost'
 import Auth from './Auth'
+import Search from './Search'
 
 function Main() {
 
@@ -24,11 +25,12 @@ function Main() {
             <Header subreddit={subreddit} setSubreddit={setSubreddit} user={user} />
             <div className="mainContent">
                 <Routes>
-                    <Route path="/" element={<Home subreddit={subreddit} setSubreddit={setSubreddit} setPosts={setPosts} posts={posts} user={user}/>} />
+                    <Route path="/" element={<Home subreddit={subreddit} setSubreddit={setSubreddit} setPosts={setPosts} posts={posts} user={user} />} />
                     <Route path="/r/:subreddit" element={<Posts subreddit={subreddit} setSubreddit={setSubreddit} setPosts={setPosts} posts={posts} />} />
                     <Route path="/r/:subreddit/:id" element={<PostComments subreddit={subreddit} posts={posts} />} />
                     <Route path="/post/create" element={<CreatePost />} />
                     <Route path="/auth" element={<Auth setUser={setUser} />} />
+                    <Route path="/search/:searchInput" element={<Search posts={posts} setPosts={setPosts} subreddit={subreddit} setSubreddit={setSubreddit} />} />
                     {/* more routes soon */}
                 </Routes>
             </div>

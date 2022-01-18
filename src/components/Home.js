@@ -2,9 +2,10 @@ import Posts from './Posts'
 import SubredditList from './SubredditList'
 import './styles/Home.css'
 import Header from './Header'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 function Home(props) {
-    
+
     const { setSubreddit, subreddit, setPosts, posts } = props
 
     return (

@@ -2,6 +2,8 @@ import './styles/Header.css'
 import { Link } from 'react-router-dom'
 import axiosInstance from '../axiosInstance'
 import { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 function Header(props) {
     const { subreddit, setSubreddit, user } = props
@@ -10,7 +12,7 @@ function Header(props) {
     const onClickLogin = () => {
         axiosInstance.get("/auth")
             .then(res => {
-                window.location.href = res.data.authUrl 
+                window.location.href = res.data.authUrl
             })
     }
     const Logout = () => {
@@ -25,6 +27,7 @@ function Header(props) {
     return (
         <div>
             <header>
+
                 <div className='redditWrapper'>
                     <Link id="reddit" to="/">
                         reddit
@@ -35,7 +38,7 @@ function Header(props) {
 
                 <div className='searchWrapper'>
                     <input className='searchBar' placeholder="search reddit" onChange={(e) => setSearch(e.target.value)}></input>
-                    <Link to={`/search/${search}`} className="plusPost">+</Link>
+                    <Link to={`/search/${search}`} className="plusPost"><FontAwesomeIcon icon={faSearch} /></Link>
 
                 </div>
 
@@ -46,16 +49,16 @@ function Header(props) {
                     <span className="tooltipy">create post</span>
                 </div>
 
-                {user 
-                ?
-                <div className='userWrapper'>
-                    <h1 id="loggedUser">u/{user}</h1>
-                    <button id="logout" onClick={Logout}>logout</button>
-                </div>
-                :
-                <div className='userWrapper'>
-                    <button onClick={onClickLogin}>log in</button>
-                </div> 
+                {user
+                    ?
+                    <div className='userWrapper'>
+                        <h1 id="loggedUser">u/{user}</h1>
+                        <button id="logout" onClick={Logout}>logout</button>
+                    </div>
+                    :
+                    <div className='userWrapper'>
+                        <button onClick={onClickLogin}>log in</button>
+                    </div>
                 }
             </header>
         </div>

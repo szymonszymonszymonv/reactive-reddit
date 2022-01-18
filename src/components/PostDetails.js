@@ -13,15 +13,15 @@ function PostDetails(props) {
         e.stopPropagation()
         window.open(img)
     }
-    
+
     const createCarousel = (images) => {
-        if(images.length === 0) {
+        if (images.length === 0) {
             return ""
         }
-        if(images.length === 1) {
+        if (images.length === 1) {
             return (
                 <CCarousel>
-                    <CCarouselItem onClick={(e) => {imgOnClick(e, images[0])}}>
+                    <CCarouselItem onClick={(e) => { imgOnClick(e, images[0]) }}>
                         <CImage fluid rounded src={images[0]} />
                     </CCarouselItem>
                 </CCarousel>
@@ -32,7 +32,7 @@ function PostDetails(props) {
                 <CCarousel controls indicators>
                     {images.map(image => {
                         return (
-                            <CCarouselItem key={image} onClick={(e) => {imgOnClick(e, image)}}>
+                            <CCarouselItem key={image} onClick={(e) => { imgOnClick(e, image) }}>
                                 <CImage fluid rounded src={image} />
                             </CCarouselItem>
                         )
@@ -42,12 +42,12 @@ function PostDetails(props) {
         }
     }
 
-    try{
-        for(let img of post.medias) {
-            if(img.u){
+    try {
+        for (let img of post.medias) {
+            if (img.u) {
                 media.push(img.u)
             }
-            if(img.gif){
+            if (img.gif) {
                 media.push(img.gif)
             }
         }
@@ -55,7 +55,7 @@ function PostDetails(props) {
     catch {
         console.log("no medias")
     }
-    if(post.imageUrl !== "") {
+    if (post.imageUrl !== "") {
         media.push(post.imageUrl)
     }
     let carousel = createCarousel(media)
@@ -67,10 +67,11 @@ function PostDetails(props) {
             <div className="postContent">
                 <span className="author">posted by u/{post.author} || {post.timeInHours}</span>
                 <span className="title">{post.title}</span>
+                <span className="selftext">{post.selftext}</span>
                 {carousel}
             </div>
         </div >
-        
+
     )
 }
 

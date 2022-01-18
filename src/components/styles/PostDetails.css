@@ -7,3 +7,8 @@
 img {
     cursor: pointer;
 }
+
+.selftext {
+    font-size: 0.85rem;
+    color: rgb(184, 167, 135);
+}

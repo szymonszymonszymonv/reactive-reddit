@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom"
+import './styles/SubredditListCard.css'
 
 function SubredditListCard(props) {
     const navigate = useNavigate()
@@ -12,12 +13,10 @@ function SubredditListCard(props) {
     return (
         subreddits.map(subreddit => {
             return (
-                <div>
-                    <div className="postContainer subredditContainer" onClick={(e) => { subredditOnClickRedirect(e, subreddit) }}>
-                        <div className="postContent subredditContent">
-                            <span className="subredditName">{subreddit.url} || {subreddit.subscribers}</span>
-                            <span className="subredditSubtitle">{subreddit.description}</span>
-                        </div>
+                <div className="postContainer subredditContainer" onClick={(e) => { subredditOnClickRedirect(e, subreddit) }}>
+                    <div className="postContent subredditContent">
+                        <span className="subredditName">community: {subreddit.url}  subscribers: {subreddit.subscribers}</span>
+                        <span className="subredditSubtitle">{subreddit.description}</span>
                     </div>
                 </div>
             )

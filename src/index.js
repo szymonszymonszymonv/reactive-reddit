@@ -12,10 +12,10 @@ import './components/styles/PostDetails.css'
 import './components/styles/Posts.css'
 import './components/styles/SubmissionScore.css'
 import './components/styles/SubredditList.css'
-
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom'
+
 
 ReactDOM.render(
     <React.StrictMode>

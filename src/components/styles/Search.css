@@ -1,0 +1,36 @@
+.searchContainer {
+    display: flex;
+    max-width: 50vw;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.searchedSubreddits {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    word-break: break-all; 
+    
+    
+}
+.searchedPosts {
+    display: flex;
+    flex-direction: column;
+}
+.searchButtons>button { 
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border: 1px solid rgb(57, 69, 122);
+    background-color: rgb(32, 38, 65);
+    border-radius: 50px;
+    transition: 0.3s box-shadow;
+}
+.searchButtons>button:hover {
+    box-shadow: 0px 5px 15px 0px rgb(10, 18, 56);
+}
+
+button.active {
+    background-color: rgb(44, 52, 88);
+}

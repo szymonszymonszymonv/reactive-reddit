@@ -171,7 +171,7 @@ app.get('/r/:subreddit', async (req, res) => {
 
         let medias = []
 
-        
+
         let url = ""
 
         try {
@@ -180,9 +180,9 @@ app.get('/r/:subreddit', async (req, res) => {
         catch {
             console.log("no images in post")
         }
-        
-        if(post.media_metadata){
-            for(let img in post.media_metadata){
+
+        if (post.media_metadata) {
+            for (let img in post.media_metadata) {
                 medias.push(post.media_metadata[img].s)
             }
         }
@@ -203,7 +203,7 @@ app.get('/r/:subreddit', async (req, res) => {
 
     let object = { posts: posts }
     console.log("sending posts")
-    res.send(JSON.stringify(object)) 
+    res.send(JSON.stringify(object))
 })
 
 let constructComment = (comment) => {
@@ -267,12 +267,12 @@ app.get(`/r/:subreddit/:id/loadMore`, async (req, res) => {
     let id = req.params.id
     console.log(`loading more after post: ${id}`)
     try {
-        posts = await reddit.getHot(subreddit, {limit: 10, after: `t3_${id}`})
+        posts = await reddit.getHot(subreddit, { limit: 10, after: `t3_${id}` })
     }
-    catch (err){
+    catch (err) {
         console.log(err)
     }
-    
+
     posts = posts.map(post => {
         let timeStamp = Date.now()
         let postTime = post.created_utc * 1000 // change s to ms
@@ -289,9 +289,9 @@ app.get(`/r/:subreddit/:id/loadMore`, async (req, res) => {
         catch {
             console.log("no images in post")
         }
-        
-        if(post.media_metadata){
-            for(let img in post.media_metadata){
+
+        if (post.media_metadata) {
+            for (let img in post.media_metadata) {
                 medias.push(post.media_metadata[img].s)
             }
         }
@@ -309,9 +309,9 @@ app.get(`/r/:subreddit/:id/loadMore`, async (req, res) => {
         }
     })
 
-    let object = {posts: posts}
+    let object = { posts: posts }
     console.log("sending posts")
-    res.send(JSON.stringify(object)) 
+    res.send(JSON.stringify(object))
 })
 app.post(`/:id/upvote`, (req, res) => {
     let id = req.params.id
@@ -392,13 +392,13 @@ app.post(`/:id/addComment`, (req, res) => {
     let type = req.body.type
     let id = req.params.id
     console.log(`adding comment '${object.text}' for submission: ${id}`)
-    
+
     // let cut = id.slice(3) // moze niepotrzebne? ucinam t3_ z id
     let r = reddit
     if (reddit_user) {
         r = reddit_user
     }
-    if(type === "post") {
+    if (type === "post") {
         r.getSubmission(id).reply(object.text)
             .then(r => {
                 res.send(r.data)
@@ -407,14 +407,14 @@ app.post(`/:id/addComment`, (req, res) => {
                 res.send(err)
             })
     }
-    else{
+    else {
         r.getComment(id).reply(object.text)
-        .then(r => {
-            res.send(r.data)
-        })
-        .catch(err => {
-            res.send(err)
-        })
+            .then(r => {
+                res.send(r.data)
+            })
+            .catch(err => {
+                res.send(err)
+            })
     }
 })
 
@@ -456,7 +456,7 @@ app.post(`/addPostImage`, (req, res) => {
         subredditName: subreddit,
         title: title,
         url: imgUrl
-      }).then(data => {
+    }).then(data => {
         let submission_name = data.name.slice(3)
         let obj = {
             link: `r/${subreddit}/${submission_name}`
@@ -488,7 +488,6 @@ app.get(`/search/:searchQuery`, (req, res) => {
 
         let posts = [...postsData]
         posts = posts.map(post => {
-            let currDate = new Date()
             let timeStamp = Date.now()
             let postTime = post.created_utc * 1000 // change s to ms
             let timeDiff = timeStamp - postTime
@@ -496,12 +495,20 @@ app.get(`/search/:searchQuery`, (req, res) => {
 
             let medias = []
 
+            let url = ""
+
+            try {
+                url = post.preview.images[0].source.url
+            }
+            catch {
+                console.log("no images in post")
+            }
+
             if (post.media_metadata) {
                 for (let img in post.media_metadata) {
                     medias.push(post.media_metadata[img].s)
                 }
             }
-
             return {
                 id: post.id,
                 title: post.title,
@@ -509,12 +516,11 @@ app.get(`/search/:searchQuery`, (req, res) => {
                 selftext: post.selftext,
                 score: post.score,
                 subreddit: post.subreddit.display_name,
-                imageUrl: post.url_overridden_by_dest,
+                imageUrl: url,
                 timeInHours: timeString(hours),
                 likes: post.likes,
                 medias: medias
             }
-
         })
 
         res.send({ posts: posts, subreddits: subreddits })

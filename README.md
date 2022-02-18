@@ -15,7 +15,7 @@ This is a React+Express reddit client built to experience reddit with pleasant, 
 ### Prerequisites
 You need a reddit account and a registered app on your account [(link)](https://ssl.reddit.com/prefs/apps/)
 ### Installation
-1. Get a refresh and access token (you can use [reddit-oauth-helper](https://github.com/not-an-aardvark/reddit-oauth-helper) for this)
+1. Get a refresh and access token (I recommend using [reddit-oauth-helper](https://github.com/not-an-aardvark/reddit-oauth-helper) for this)
 2. Clone the repo
 ```
 git clone https://github.com/szymonszymonszymonv/reactive-reddit.git

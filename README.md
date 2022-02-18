@@ -1,7 +1,7 @@
 # About the project
 This is a React+Express reddit client built to experience reddit with pleasant, minimalistic and adless ui.
 
-![preview gif](https://i.imgur.com/eQY98Rm.gif)
+![preview gif](https://imgur.com/Mf223im.gif)
 # Current functionalities
 * Browsing
 * Upvote/Downvote
